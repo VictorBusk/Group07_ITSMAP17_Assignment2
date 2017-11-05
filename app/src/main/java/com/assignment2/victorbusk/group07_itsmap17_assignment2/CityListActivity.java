@@ -1,10 +1,12 @@
 package com.assignment2.victorbusk.group07_itsmap17_assignment2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.ListViewItem;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Globals;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherJsonParser;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Globals.CONNECT;
@@ -37,10 +47,30 @@ public class CityListActivity extends AppCompatActivity {
     private ListView weatherLV;
     private Button btnRefresh, btnAdd;
     private TextView txtCity;
-    ArrayAdapter<String> adapter;
+//    ArrayAdapter<String> adapter;
+    private CustomAdaptor customAdaptor;
     final List<String> stringList = new ArrayList<>();
+    final ArrayList<ListViewItem> itemList = new ArrayList<>();
 
     String cityName, temp, humidity;
+
+    List<String> web;
+    Integer[] imageId = {
+            R.drawable.mrpbh
+    };
+
+    // All static variables
+    static final String URL = "https://api.androidhive.info/music/music.xml";
+    // XML node keys
+    static final String KEY_SONG = "song"; // parent node
+    static final String KEY_ID = "id";
+    static final String KEY_TITLE = "title";
+    static final String KEY_ARTIST = "artist";
+    static final String KEY_DURATION = "duration";
+    static final String KEY_THUMB_URL = "thumb_url";
+
+    ListView list;
+    CustomAdaptor adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -61,6 +91,7 @@ public class CityListActivity extends AppCompatActivity {
 
         txtCity = findViewById(R.id.tvAddCity);
         weatherLV = findViewById(R.id.weatherListView);
+        weatherLV.setAdapter(customAdaptor);
         weatherLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
                 // When clicked, show a toast with the TextView text
@@ -79,6 +110,7 @@ public class CityListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     persistCity();
+//                    sendRequest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -95,7 +127,7 @@ public class CityListActivity extends AppCompatActivity {
             }
         });
 
-        reloadPreferences();
+//        reloadPreferences();
     }
 
     protected void persistCity() throws IOException {
@@ -124,10 +156,15 @@ public class CityListActivity extends AppCompatActivity {
             items.add(itemWords[i]);
         }
         stringList.addAll(items);
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, stringList);
-        weatherLV.setAdapter(adapter);
+
+//        adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, stringList);
+        weatherLV.setAdapter(customAdaptor);
     }
+
+//    private List<ListViewItem> getWeatherInfo(){
+//
+//    }
 
     private void sendRequest(){
         DownloadTask d = new DownloadTask();
@@ -225,6 +262,47 @@ public class CityListActivity extends AppCompatActivity {
         // Return full string
         return s;
     }
+
+//    private void setupListView(){
+//        ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
+//
+//        JSON parser = new WeatherJsonParser();
+//        String xml = parser.(URL); // getting XML from URL
+//        DocumentsContract.Document doc = parser.getDomElement(xml); // getting DOM element
+//
+//        NodeList nl = doc.getElementsByTagName(KEY_SONG);
+//        // looping through all song nodes <song>
+//        for (int I = 0; I < nl.getLength(); i++) {
+//            // creating new HashMap
+//            HashMap<String, String> map = new HashMap<String, String>();
+//            Element e = (Element) nl.item(i);
+//            // adding each child node to HashMap key => value
+//            map.put(KEY_ID, parser.getValue(e, KEY_ID));
+//            map.put(KEY_TITLE, parser.getValue(e, KEY_TITLE));
+//            map.put(KEY_ARTIST, parser.getValue(e, KEY_ARTIST));
+//            map.put(KEY_DURATION, parser.getValue(e, KEY_DURATION));
+//            map.put(KEY_THUMB_URL, parser.getValue(e, KEY_THUMB_URL));
+//
+//            // adding HashList to ArrayList
+//            songsList.add(map);
+//        }
+//
+//        list=(ListView)findViewById(R.id.list);
+//
+//        // Getting adapter by passing xml data ArrayList
+//        adapter=new CustomAdaptor(this, songsList);
+//        list.setAdapter(adapter);
+//
+//        // Click event for single list row
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//            }
+//        });
+//    }
 
     private void startCityDetailsActivity() {
         Intent intent = new Intent(this, CityDetailsActivity.class);
