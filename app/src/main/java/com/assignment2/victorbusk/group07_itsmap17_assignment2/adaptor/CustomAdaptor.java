@@ -12,8 +12,6 @@ import com.assignment2.victorbusk.group07_itsmap17_assignment2.R;
 
 public class CustomAdaptor extends ArrayAdapter<String> {
 
-    private static LayoutInflater inflater=null;
-
     public CustomAdaptor(Context context, String[] cityNames) {
         super(context, R.layout.custom_row, cityNames);
     }

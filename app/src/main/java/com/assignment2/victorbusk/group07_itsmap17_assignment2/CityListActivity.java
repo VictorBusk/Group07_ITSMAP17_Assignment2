@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.ListViewItem;
@@ -39,16 +38,12 @@ public class CityListActivity extends AppCompatActivity {
 
     private ListView weatherLV;
     private Button btnRefresh, btnAdd;
-    private TextView txtCity;
-//    ArrayAdapter<String> adapter;
-    final List<String> stringList = new ArrayList<>();
-    final ArrayList<ListViewItem> itemList = new ArrayList<>();
+    ListAdapter customAdaptor;
+    public static List<String> stringList = new ArrayList<>();
 
-    public static TextView cityTV, tempTV;
+    public static TextView cityTV, tempTV, txtCity;
 
     String cityName, temp, humidity;
-
-    ListView list;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,11 +62,7 @@ public class CityListActivity extends AppCompatActivity {
             weatherImage = null;
         }
 
-        String[] cityNames = {"Aarhus", "Vejle", "Horsens"};
-
-        ListAdapter customAdaptor = new CustomAdaptor(this, cityNames);
         weatherLV = findViewById(R.id.weatherListView);
-        weatherLV.setAdapter(customAdaptor);
 
 //        cityTV = (TextView)findViewById(R.id.place);
 //        tempTV = (TextView)findViewById(R.id.temp);
@@ -80,15 +71,10 @@ public class CityListActivity extends AppCompatActivity {
         getData.execute("http://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=3c70f7d8f9e272cd6f73036a65228391");
 
         txtCity = findViewById(R.id.tvAddCity);
-//        weatherLV.setAdapter(customAdaptor);
 
         weatherLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
-                // When clicked, show a toast with the TextView text
                 startCityDetailsActivity();
-
-                Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -100,7 +86,6 @@ public class CityListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     persistCity();
-//                    sendRequest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -117,7 +102,7 @@ public class CityListActivity extends AppCompatActivity {
             }
         });
 
-//        reloadPreferences();
+        reloadPreferences();
     }
 
     protected void persistCity() throws IOException {
@@ -147,14 +132,10 @@ public class CityListActivity extends AppCompatActivity {
         }
         stringList.addAll(items);
 
-//        adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, stringList);
-//        weatherLV.setAdapter(customAdaptor);
+        customAdaptor = new CustomAdaptor(this, itemWords);
+        weatherLV = findViewById(R.id.weatherListView);
+        weatherLV.setAdapter(customAdaptor);
     }
-
-//    private List<ListViewItem> getWeatherInfo(){
-//
-//    }
 
     private void sendRequest(){
         DownloadTask d = new DownloadTask();
@@ -167,7 +148,6 @@ public class CityListActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             Log.d(CONNECT, "Starting background task");
             return callURL(urls[0]);
-
         }
 
         @Override
@@ -240,7 +220,6 @@ public class CityListActivity extends AppCompatActivity {
         String line;
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-
 
         try {
             while ((line = rd.readLine()) != null) { s += line; }

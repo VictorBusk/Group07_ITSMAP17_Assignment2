@@ -42,7 +42,6 @@ public class WeatherData extends AsyncTask<String, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
