@@ -57,16 +57,22 @@ public class CustomAdaptor extends BaseAdapter {
             TextView txtCityName = (TextView) customView.findViewById(R.id.tvCityName);
             txtCityName.setText(weatherItemModel.getName());
 
+            String tempString = weatherItemModel.getTemperature() + "°C";
             TextView txtTemperature = (TextView) customView.findViewById(R.id.tvTemp);
-            txtTemperature.setText(weatherItemModel.getTemperature());
+            txtTemperature.setText(tempString);
 
+            String humidString = weatherItemModel.getHumidity() + "%";
             TextView txtHumid = (TextView) customView.findViewById(R.id.tvHumidity);
-            txtHumid.setText(weatherItemModel.getHumidity());
+            txtHumid.setText(humidString);
+
+            ImageView image = (ImageView) customView.findViewById(R.id.img);
+            image.setImageResource(R.drawable.mrpbh);
         }
-
-//        image.setImageResource(R.drawable.mrpbh);
-
         return customView;
+    }
+
+    public void clearData() {
+        weather.clear();
     }
 
 //    private void setWeatherPicture(View convertView, String weatherDesc) {
@@ -109,6 +115,5 @@ public class CustomAdaptor extends BaseAdapter {
 //        } else {
 //            weatherIconView.setIconResource(this.context.getString(R.string.wi_na));
 //        }
-//
 //    }
 }

@@ -1,9 +1,5 @@
 package com.assignment2.victorbusk.group07_itsmap17_assignment2.model;
 
-/**
- * Created by kasper on 30/04/16.
- */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

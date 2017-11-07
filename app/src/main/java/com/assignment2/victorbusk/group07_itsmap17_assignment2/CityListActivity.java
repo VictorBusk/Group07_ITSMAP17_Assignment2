@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherData;
 
 import java.io.IOException;
@@ -29,9 +30,9 @@ public class CityListActivity extends AppCompatActivity {
     public static List<String> stringList = new ArrayList<>();
     public static WeatherItemModel weatherItemModel;
     ArrayList<WeatherItemModel> weatherList = new ArrayList<WeatherItemModel>();
+    StringBuilder stringBuilder = new StringBuilder();
 
-    public static TextView cityTV, tempTV, txtCity;
-    WeatherData getData = new WeatherData();
+    public static TextView txtCity;
 
     String cityName, temp, humidity;
 
@@ -40,28 +41,15 @@ public class CityListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.city_list_activity);
 
-        if (savedInstanceState != null) {
-            cityName = savedInstanceState.getString(Const.CITY_NAME, getString(R.string.tv_city_name));
-            temp = savedInstanceState.getString(Const.TEMP, getString(R.string.tv_temp));
-            humidity = savedInstanceState.getString(Const.HUMIDITY, getString(R.string.tv_humidity));
-            weatherImage = savedInstanceState.getParcelable(Const.WEATHER_IMAGE);
-        } else {
-            cityName = getString(R.string.tv_city_name);
-            temp = getString(R.string.tv_temp);
-            humidity = getString(R.string.tv_humidity);
-            weatherImage = null;
-        }
-
+        txtCity = findViewById(R.id.tvAddCity);
         weatherLV = findViewById(R.id.weatherListView);
 
-        txtCity = findViewById(R.id.tvAddCity);
-
+        weatherLV = findViewById(R.id.weatherListView);
         weatherLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
                 startCityDetailsActivity();
             }
         });
-
 
         //Add button pressed: Persist city name, add to list and clear textview
         btnAdd = findViewById(R.id.btnAdd);
@@ -81,49 +69,51 @@ public class CityListActivity extends AppCompatActivity {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reloadPreferences();
+                loadDataFromPreferences();
             }
         });
 
-//        reloadPreferences();
+        SharedPreferences preferences = getSharedPreferences("PREFS", 0);
+        preferences.edit().remove("words").commit();
+
+        loadDataFromPreferences();
     }
 
     protected void persistCity() throws IOException {
         stringList.clear();
         stringList.add(txtCity.getText().toString());
-        StringBuilder stringBuilder = new StringBuilder();
         for (String s : stringList) {
             stringBuilder.append(s);
             stringBuilder.append("!");
         }
-
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("words", stringBuilder.toString());
-        editor.apply();
-        reloadPreferences();
+        editor.commit();
+        loadDataFromPreferences();
     }
 
-    protected void reloadPreferences() {
-        weatherLV.setAdapter(null);
+    protected void loadDataFromPreferences() {
+        CustomAdaptor clearAdapter = (CustomAdaptor) weatherLV.getAdapter();
+        if(clearAdapter != null){
+            clearAdapter.clearData();
+            clearAdapter.notifyDataSetChanged();
+        }
+
         SharedPreferences settings = getSharedPreferences("PREFS", 0);
         String wordString = settings.getString("words", "");
         String[] itemWords = wordString.split("!");
-        List<String> items = new ArrayList<String>();
         int i = 0;
         for (String itemWord : itemWords) {
-            getData.execute("http://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=3c70f7d8f9e272cd6f73036a65228391").toString();
-            weatherList.add(i, weatherItemModel);
-            if (weatherList != null) {
-                weatherLV = findViewById(R.id.weatherListView);
-                customAdaptor = new CustomAdaptor(this, weatherList);
-                weatherLV.setAdapter(customAdaptor);
+            WeatherData getData = new WeatherData();
+            getData.execute(Connector.CallAPI(itemWord));
+            if (weatherItemModel != null) {
+                weatherList.add(i, weatherItemModel);
+                i++;
             }
-//            weatherLV = findViewById(R.id.weatherListView);
-//            customAdaptor = new CustomAdaptor(this, itemWords);
-//            weatherLV.setAdapter(customAdaptor);
-            i++;
         }
+        customAdaptor = new CustomAdaptor(this, weatherList);
+        weatherLV.setAdapter(customAdaptor);
     }
 
     private void startCityDetailsActivity() {
@@ -135,3 +125,17 @@ public class CityListActivity extends AppCompatActivity {
         startActivityForResult(intent, Const.REQUEST_DETAILS_ACTIVITY);
     }
 }
+
+//////ROD///////
+
+//        if (savedInstanceState != null) {
+//            cityName = savedInstanceState.getString(Const.CITY_NAME, getString(R.string.tv_city_name));
+//            temp = savedInstanceState.getString(Const.TEMP, getString(R.string.tv_temp));
+//            humidity = savedInstanceState.getString(Const.HUMIDITY, getString(R.string.tv_humidity));
+//            weatherImage = savedInstanceState.getParcelable(Const.WEATHER_IMAGE);
+//        } else {
+//            cityName = getString(R.string.tv_city_name);
+//            temp = getString(R.string.tv_temp);
+//            humidity = getString(R.string.tv_humidity);
+//            weatherImage = null;
+//        }
