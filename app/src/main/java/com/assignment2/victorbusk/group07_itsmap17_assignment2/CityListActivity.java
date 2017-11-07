@@ -127,7 +127,6 @@ public class CityListActivity extends AppCompatActivity {
 }
 
 //////ROD///////
-
 //        if (savedInstanceState != null) {
 //            cityName = savedInstanceState.getString(Const.CITY_NAME, getString(R.string.tv_city_name));
 //            temp = savedInstanceState.getString(Const.TEMP, getString(R.string.tv_temp));

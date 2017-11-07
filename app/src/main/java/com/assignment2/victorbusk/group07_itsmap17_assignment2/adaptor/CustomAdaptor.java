@@ -54,18 +54,18 @@ public class CustomAdaptor extends BaseAdapter {
 
         weatherItemModel = weather.get(position);
         if(weatherItemModel!=null){
-            TextView txtCityName = (TextView) customView.findViewById(R.id.tvCityName);
+            TextView txtCityName = customView.findViewById(R.id.tvCityName);
             txtCityName.setText(weatherItemModel.getName());
 
             String tempString = weatherItemModel.getTemperature() + "°C";
-            TextView txtTemperature = (TextView) customView.findViewById(R.id.tvTemp);
+            TextView txtTemperature = customView.findViewById(R.id.tvTemp);
             txtTemperature.setText(tempString);
 
             String humidString = weatherItemModel.getHumidity() + "%";
-            TextView txtHumid = (TextView) customView.findViewById(R.id.tvHumidity);
+            TextView txtHumid = customView.findViewById(R.id.tvHumidity);
             txtHumid.setText(humidString);
 
-            ImageView image = (ImageView) customView.findViewById(R.id.img);
+            ImageView image = customView.findViewById(R.id.img);
             image.setImageResource(R.drawable.mrpbh);
         }
         return customView;
