@@ -30,12 +30,11 @@ import java.util.concurrent.ExecutionException;
 public class CityListActivity extends AppCompatActivity {
 
     public static ListView weatherLV;
-    public static WeatherItemModel weatherItemModel;
-    public static ArrayList<WeatherItemModel> weatherList = new ArrayList<WeatherItemModel>();
-    public static int deletePos;
+    public static int deletePos, rowNum;
     public static SharedPreferences preferences;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
+    public static ArrayList<WeatherItemModel> weatherList = new ArrayList<WeatherItemModel>();
 
     public static TextView txtCity;
 
@@ -56,11 +55,11 @@ public class CityListActivity extends AppCompatActivity {
         weatherLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
                 deletePos = position;
-                startCityDetailsActivity();
+                startCityDetailsActivity(position);
             }
         });
 
-        //Add button pressed: Persist city name, add to list and clear textview
+        //Add button pressed: Persist city name.
         Button btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +98,18 @@ public class CityListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            refreshData();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected void persistCity() throws Exception { //Saved city name and refresh all data
         String newCity = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Extend sharedpreference list
         SharedPreferences.Editor editor = preferences.edit();
@@ -108,7 +119,6 @@ public class CityListActivity extends AppCompatActivity {
     }
 
     protected void refreshData() throws ExecutionException, InterruptedException { //Refresh listview from API call
-//        weatherItemModel = null;
         CustomAdaptor clearAdapter = (CustomAdaptor) weatherLV.getAdapter();
         if(clearAdapter != null){ //Clear listview
             clearAdapter.clearData();
@@ -116,19 +126,15 @@ public class CityListActivity extends AppCompatActivity {
         }
         String wordString = preferences.getString(Const.KEY, "");
         String[] itemWords = wordString.split("!");
-        int i = 0;
+        rowNum = 0;
         for (String itemWord : itemWords) {
-            new WeatherService(weatherLV, this, i).execute(Connector.CallAPI(itemWord));
-            i++;
+            new WeatherService(this, Const.LIST_ACTIVITY_CALLER).execute(Connector.CallAPI(itemWord));
         }
     }
 
-    private void startCityDetailsActivity() { //Start details activity
+    private void startCityDetailsActivity(int position) { //Start details activity
         Intent intent = new Intent(this, CityDetailsActivity.class);
-        intent.putExtra(Const.CITY_NAME, weatherItemModel.getName());
-        intent.putExtra(Const.TEMP, weatherItemModel.getTemperature() + "°C");
-        intent.putExtra(Const.HUMIDITY, weatherItemModel.getHumidity() + "%");
-        intent.putExtra(Const.DESCRIPTION, weatherItemModel.getDescription());
+        intent.putExtra(Const.CITY_NAME, weatherList.get(position).getName());
         startActivityForResult(intent, Const.REQUEST_DETAILS_ACTIVITY);
     }
 

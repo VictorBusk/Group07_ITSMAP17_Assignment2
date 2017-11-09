@@ -10,32 +10,30 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherService;
 
 import java.util.ArrayList;
 
 public class CityDetailsActivity extends AppCompatActivity {
 
     private Button btnRemove, btnOk;
-    private TextView txtCity, txtTemp, txtHumidity, txtDescription;
+    public static TextView txtCity, txtTemp, txtHumidity, txtDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.city_details_activity);
 
-        final Intent data = getIntent();
-
         txtCity = findViewById(R.id.tvCityName);
-        txtCity.setText(data.getStringExtra(Const.CITY_NAME));
-
         txtTemp = findViewById(R.id.tvTemp);
-        txtTemp.setText(data.getStringExtra(Const.TEMP));
-
         txtHumidity = findViewById(R.id.tvHumidity);
-        txtHumidity.setText(data.getStringExtra(Const.HUMIDITY));
-
         txtDescription = findViewById(R.id.tvDescription);
-        txtDescription.setText(data.getStringExtra(Const.DESCRIPTION));
+
+
+        final Intent data = getIntent();
+        String cityName = data.getStringExtra(Const.CITY_NAME);
+        new WeatherService(this, Const.DETAILS_ACTIVITY_CALLER).execute(Connector.CallAPI(cityName));
 
         //Refresh button pressed: Reload layout and reload listView (fresh data)
         btnRemove = findViewById(R.id.btnRemove);

@@ -10,4 +10,7 @@ public class Const {
     public static final String DESCRIPTION = "desc";
 
     public static final String KEY = "words";
+
+    public static final String LIST_ACTIVITY_CALLER = "list";
+    public static final String DETAILS_ACTIVITY_CALLER = "details";
 }
