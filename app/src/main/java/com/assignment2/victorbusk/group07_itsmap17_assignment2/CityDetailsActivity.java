@@ -38,7 +38,7 @@ public class CityDetailsActivity extends AppCompatActivity {
         txtDescription.setText(data.getStringExtra(Const.DESCRIPTION));
 
         //Refresh button pressed: Reload layout and reload listView (fresh data)
-        btnRemove = (Button) findViewById(R.id.btnRemove);
+        btnRemove = findViewById(R.id.btnRemove);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,14 +51,14 @@ public class CityDetailsActivity extends AppCompatActivity {
                 editor.apply();
 
                 CityListActivity.weatherList.remove(CityListActivity.deletePos);
-                CityListActivity.customAdaptor.notifyDataSetChanged();
+//                CityListActivity.customAdaptor.notifyDataSetChanged();
                 setResult(RESULT_OK, data);
                 finish();
             }
         });
 
         //Refresh button pressed: Reload layout and reload listView (fresh data)
-        btnOk = (Button) findViewById(R.id.btnOk);
+        btnOk = findViewById(R.id.btnOk);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

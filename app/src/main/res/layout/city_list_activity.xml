@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="false"
     tools:context="com.assignment2.victorbusk.group07_itsmap17_assignment2.CityListActivity">
 
     <Button
