@@ -37,11 +37,12 @@
         android:layout_marginTop="32dp"
         android:text="@string/tv_humidity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCityName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCityName"
+        android:layout_marginLeft="50dp" />
 
     <TextView
         android:id="@+id/tvTemp"
-        android:layout_width="14dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="50dp"
@@ -81,7 +82,7 @@
         android:text="@string/btn_remove"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button2"
+        app:layout_constraintTop_toTopOf="@+id/btnOk"
         android:layout_marginLeft="50dp" />
 
     <Button

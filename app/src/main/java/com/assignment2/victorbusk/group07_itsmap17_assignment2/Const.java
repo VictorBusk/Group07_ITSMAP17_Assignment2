@@ -7,4 +7,7 @@ public class Const {
     public static final String CITY_NAME = "city";
     public static final String TEMP = "temp";
     public static final String HUMIDITY = "memory";
+    public static final String DESCRIPTION = "desc";
+
+    public static final String KEY = "words";
 }

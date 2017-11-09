@@ -1,29 +1,23 @@
 package com.assignment2.victorbusk.group07_itsmap17_assignment2.utils;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.CityListActivity;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.CityWeather;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.text.DecimalFormat;
 
-import static com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector.CONNECT;
-
-public class WeatherData extends AsyncTask<String, Void, String> {
+public class WeatherService extends AsyncTask<String, Void, String> {
 
     String result;
     private static final double TO_CELCIOUS_FROM_KELVIN = -273.15;
+    private static WeatherItemModel newWeatherItemModel;
 
     @Override
     protected String doInBackground(String... urls) {
@@ -55,13 +49,25 @@ public class WeatherData extends AsyncTask<String, Void, String> {
             Gson gson = new GsonBuilder().create();
             CityWeather weatherData = gson.fromJson(result, CityWeather.class);
             String cityName = weatherData.name;
-            Double temperature = weatherData.main.temp.doubleValue() + TO_CELCIOUS_FROM_KELVIN;
-            Double humidity = weatherData.main.humidity.doubleValue();
+            weatherData.main.humidity.doubleValue();
+            DecimalFormat df = new DecimalFormat("#");
+            String temperature = df.format(weatherData.main.temp.doubleValue() + TO_CELCIOUS_FROM_KELVIN);
+            String humidity = df.format(weatherData.main.humidity.doubleValue());
 
-            CityListActivity.weatherItemModel = new WeatherItemModel(cityName, temperature, humidity);
+            String description = "";
+            for(int i=0; i<weatherData.weather.size(); i++) {
+                description += weatherData.weather.get(i).description;
+                if(i+1 != weatherData.weather.size()){
+                    description += "/";
+                }
+            }
+            newWeatherItemModel = new WeatherItemModel(cityName, temperature, humidity, description);
         }
     }
 
+    public WeatherItemModel parseDataFromAPI() {
+        return newWeatherItemModel;
+    }
 /////////////KASPER//////////////
 //        Log.d(CONNECT, "Starting background task");//            getData.execute("http://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=3c70f7d8f9e272cd6f73036a65228391");
 //
@@ -140,4 +146,5 @@ public class WeatherData extends AsyncTask<String, Void, String> {
 //        // Return full string
 //        return s;
 //    }
+//
 }

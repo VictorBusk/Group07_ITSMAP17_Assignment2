@@ -2,14 +2,15 @@ package com.assignment2.victorbusk.group07_itsmap17_assignment2.model;
 
 public class WeatherItemModel {
     private String cityName_;
-    private Double temperature_;
-    private Double humidity_;
+    private String temperature_;
+    private String humidity_;
+    private String description_;
 
-    public WeatherItemModel(String cityName, Double temperature, Double humidity) {
-
+    public WeatherItemModel(String cityName, String temperature, String humidity, String description) {
         this.cityName_ = cityName;
         this.temperature_ = temperature;
         this.humidity_ = humidity;
+        this.description_ = description;
     }
 
     public String getName() {
@@ -20,20 +21,28 @@ public class WeatherItemModel {
         this.cityName_ = name;
     }
 
-    public Double getTemperature() {
+    public String getTemperature() {
         return temperature_;
     }
 
-    public void setTemperature(Double temperature) {
+    public void setTemperature(String temperature) {
         this.temperature_ = temperature;
     }
 
-    public Double getHumidity() {
+    public String getHumidity() {
         return humidity_;
     }
 
-    public void setHumidity(Double humidity) {
+    public void setHumidity(String humidity) {
         this.humidity_ = humidity;
+    }
+
+    public String getDescription() {
+        return description_;
+    }
+
+    public void setDescription(String description) {
+        this.description_ = description;
     }
 
 }

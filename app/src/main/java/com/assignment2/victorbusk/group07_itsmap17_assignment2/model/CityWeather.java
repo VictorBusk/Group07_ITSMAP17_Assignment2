@@ -12,7 +12,7 @@ public class CityWeather {
     public Coord coord;
     @SerializedName("weather")
     @Expose
-    public List<Weather> weather = null;
+    public List<Weather> weather;
     @SerializedName("base")
     @Expose
     public String base;
