@@ -16,27 +16,28 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Listener;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.UpdateManager;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherService;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class CityListActivity extends AppCompatActivity {
+public class CityListActivity extends AppCompatActivity implements Listener {
 
-    public static ListView weatherLV;
-    public static int deletePos, rowNum;
+    private ListView weatherLV;
+    public static int rowNum;
     public static SharedPreferences preferences;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
     public static ArrayList<WeatherItemModel> weatherList = new ArrayList<WeatherItemModel>();
+    int currentDeletePos;
 
-    public static TextView txtCity;
+    public TextView txtCity;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -54,7 +55,6 @@ public class CityListActivity extends AppCompatActivity {
         weatherLV = findViewById(R.id.weatherListView);
         weatherLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
-                deletePos = position;
                 startCityDetailsActivity(position);
             }
         });
@@ -87,31 +87,16 @@ public class CityListActivity extends AppCompatActivity {
             }
         });
         if(!preferences.getString(Const.KEY, "").isEmpty()) { //Checking for data. If there is any then refresh, otherwise just skip.
-            preferences.edit().remove(Const.KEY).apply();
             try {
-                refreshData();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            startAlarm();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            refreshData();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     protected void persistCity() throws Exception { //Saved city name and refresh all data
-        String newCity = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Extend sharedpreference list
+        String newCity = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Expand sharedpreference list
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Const.KEY, newCity);
         editor.apply();
@@ -128,11 +113,12 @@ public class CityListActivity extends AppCompatActivity {
         String[] itemWords = wordString.split("!");
         rowNum = 0;
         for (String itemWord : itemWords) {
-            new WeatherService(this, Const.LIST_ACTIVITY_CALLER).execute(Connector.CallAPI(itemWord));
+            new WeatherService(this).execute(Connector.CallAPI(itemWord));
         }
     }
 
     private void startCityDetailsActivity(int position) { //Start details activity
+        currentDeletePos = position;
         Intent intent = new Intent(this, CityDetailsActivity.class);
         intent.putExtra(Const.CITY_NAME, weatherList.get(position).getName());
         startActivityForResult(intent, Const.REQUEST_DETAILS_ACTIVITY);
@@ -147,12 +133,42 @@ public class CityListActivity extends AppCompatActivity {
         }
     };
 
-    public void startAlarm(View view) throws ExecutionException, InterruptedException {
+    public void startAlarm() throws ExecutionException, InterruptedException {
         refreshData();
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         int interval = 300000; //5 min
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRemoteCallComplete(WeatherItemModel weather) {
+        weatherList.add(rowNum, weather);
+        CustomAdaptor customAdaptor = new CustomAdaptor(this, weatherList);
+        customAdaptor.notifyDataSetChanged();
+        weatherLV.setAdapter(customAdaptor);
+        rowNum++;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Const.REQUEST_DETAILS_ACTIVITY && resultCode == Const.RESULT_REMOVED) {
+            String wordString = preferences.getString(Const.KEY, "");
+            String deletionTarget = data.getStringExtra(Const.CITY_NAME) + "!";
+            wordString = wordString.replaceAll("(?i)" + deletionTarget, "");
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.putString(Const.KEY, wordString);
+            editor.apply();
+
+            weatherList.remove(currentDeletePos);
+            try {
+                refreshData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

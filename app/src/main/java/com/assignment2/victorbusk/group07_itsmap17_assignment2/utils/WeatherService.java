@@ -1,14 +1,8 @@
 package com.assignment2.victorbusk.group07_itsmap17_assignment2.utils;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.CityDetailsActivity;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.CityListActivity;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.Const;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.CityWeather;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
 import com.google.gson.Gson;
@@ -28,23 +22,18 @@ import static com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Conn
 
 public class WeatherService extends AsyncTask<String, Void, String> {
 
-    private String result;
     private static final double TO_CELCIOUS_FROM_KELVIN = -273.15;
-    @SuppressLint("StaticFieldLeak")
-    private Context context;
-    private String caller;
+    Listener getListener;
 
-    public WeatherService(Context context, String caller){
-        this.context = context;
-        this.caller = caller;
+    public WeatherService(Listener listerner){
+        this.getListener = listerner;
     }
 
     @Override
     protected String doInBackground(String... urls) {
-        Log.d(CONNECT, "Starting background task");//            getData.execute("http://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=3c70f7d8f9e272cd6f73036a65228391");
+        Log.d(CONNECT, "Starting background task");
 
-
-        result = callURL(urls[0]);
+        String result = callURL(urls[0]);
         return result;
 //        result = "";
 //        URL link;
@@ -77,37 +66,20 @@ public class WeatherService extends AsyncTask<String, Void, String> {
             DecimalFormat df = new DecimalFormat("#");
             String temperature = df.format(weatherData.main.temp.doubleValue() + TO_CELCIOUS_FROM_KELVIN);
             String humidity = df.format(weatherData.main.humidity.doubleValue());
+            String img = weatherData.weather.get(0).icon;
 
-            String description = "";
+            StringBuilder description = new StringBuilder();
             for(int i=0; i<weatherData.weather.size(); i++) {
-                description += weatherData.weather.get(i).description;
+                description.append(weatherData.weather.get(i).description);
                 if(i+1 != weatherData.weather.size()){
-                    description += "/";
+                    description.append("/");
                 }
             }
-            WeatherItemModel newWeatherItemModel = new WeatherItemModel(cityName, temperature, humidity, description);
-            if(caller.equals(Const.LIST_ACTIVITY_CALLER)) {
-                setCityListActivity(newWeatherItemModel);
-            } else if(caller.equals(Const.DETAILS_ACTIVITY_CALLER)) {
-                setCityDetailsActivity(newWeatherItemModel);
-            }
+            WeatherItemModel newWeatherItemModel = new WeatherItemModel(cityName, temperature, humidity, description.toString(), img);
+            getListener.onRemoteCallComplete(newWeatherItemModel);
         }
     }
 
-    private void setCityListActivity(WeatherItemModel newWeatherItemModel) {
-        CityListActivity.weatherList.add(CityListActivity.rowNum, newWeatherItemModel);
-        CustomAdaptor customAdaptor = new CustomAdaptor(context, CityListActivity.weatherList);
-        customAdaptor.notifyDataSetChanged();
-        CityListActivity.weatherLV.setAdapter(customAdaptor);
-        CityListActivity.rowNum++;
-    }
-
-    private void setCityDetailsActivity(WeatherItemModel newWeatherItemModel) {
-        CityDetailsActivity.txtCity.setText(newWeatherItemModel.getName());
-        CityDetailsActivity.txtTemp.setText(newWeatherItemModel.getTemperature());
-        CityDetailsActivity.txtHumidity.setText(newWeatherItemModel.getHumidity());
-        CityDetailsActivity.txtDescription.setText(newWeatherItemModel.getDescription());
-    }
 /////////////KASPER//////////////
 //        Log.d(CONNECT, "Starting background task");//            getData.execute("http://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=3c70f7d8f9e272cd6f73036a65228391");
 //
@@ -182,7 +154,6 @@ public class WeatherService extends AsyncTask<String, Void, String> {
             Log.e(CONNECT, "ERROR reading HTTP response", ex);
             //ex.printStackTrace();
         }
-
         // Return full string
         return s;
     }

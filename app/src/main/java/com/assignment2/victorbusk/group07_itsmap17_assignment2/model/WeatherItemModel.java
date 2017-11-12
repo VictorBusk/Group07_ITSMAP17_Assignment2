@@ -5,12 +5,14 @@ public class WeatherItemModel {
     private String temperature_;
     private String humidity_;
     private String description_;
+    private String image_;
 
-    public WeatherItemModel(String cityName, String temperature, String humidity, String description) {
+    public WeatherItemModel(String cityName, String temperature, String humidity, String description, String image) {
         this.cityName_ = cityName;
         this.temperature_ = temperature;
         this.humidity_ = humidity;
         this.description_ = description;
+        this.image_ = image;
     }
 
     public String getName() {
@@ -43,6 +45,14 @@ public class WeatherItemModel {
 
     public void setDescription(String description) {
         this.description_ = description;
+    }
+
+    public String getImage() {
+        return image_;
+    }
+
+    public void setImage(String image) {
+        this.description_ = image;
     }
 
 }
