@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
 import com.squareup.picasso.Picasso;
 
 public class CityDetailsActivity extends AppCompatActivity {
@@ -26,16 +27,22 @@ public class CityDetailsActivity extends AppCompatActivity {
         txtCity.setText(data.getStringExtra(Const.CITY_NAME));
 
         txtTemp = findViewById(R.id.tvTemp);
-        txtTemp.setText("Temperature\n" + data.getStringExtra(Const.TEMP) + "°C");
+        String tempPrefix = getResources().getString(R.string.txt_temp);
+        String tempPostfix = getResources().getString(R.string.temp_symbol);
+        String tempString = tempPrefix + "\n" + data.getStringExtra(Const.TEMP) + tempPostfix;
+        txtTemp.setText(tempString);
 
         txtHumidity = findViewById(R.id.tvHumidity);
-        txtHumidity.setText("Humidity\n" + data.getStringExtra(Const.HUMIDITY) + "%");
+        String humPrefix = getResources().getString(R.string.txt_hum);
+        String humPostfix = getResources().getString(R.string.humidity_symbol);
+        String humString = humPrefix + "\n" + data.getStringExtra(Const.HUMIDITY) + humPostfix;
+        txtHumidity.setText(humString);
 
         txtDescription = findViewById(R.id.tvDescription);
         txtDescription.setText(data.getStringExtra(Const.DESCRIPTION));
 
         ImageView img = findViewById(R.id.img);
-        Picasso.with(this).load("http://openweathermap.org/img/w/" + data.getStringExtra(Const.WEATHER_IMAGE) + ".png").resize(300,300).into(img);
+        Picasso.with(this).load(Connector.iconURL(data.getStringExtra(Const.WEATHER_IMAGE))).resize(300, 300).into(img);
 
         final String cityName = data.getStringExtra(Const.CITY_NAME);
 
