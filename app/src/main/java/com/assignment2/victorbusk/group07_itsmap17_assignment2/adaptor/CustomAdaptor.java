@@ -69,7 +69,7 @@ public class CustomAdaptor extends BaseAdapter {
 
             String imageString = weatherItemModel.getImage();
             ImageView image = customView.findViewById(R.id.img);
-            Picasso.with(context).load("http://openweathermap.org/img/w/" + imageString + ".png").resize(50,50).into(image);
+            Picasso.with(context).load("http://openweathermap.org/img/w/" + imageString + ".png").resize(50,50).into(image); //Inspired by: http://square.github.io/picasso/
         }
         return customView;
     }
