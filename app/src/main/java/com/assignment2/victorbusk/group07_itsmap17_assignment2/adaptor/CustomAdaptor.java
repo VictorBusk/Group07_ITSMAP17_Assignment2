@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.ArrayList;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.R;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class CustomAdaptor extends BaseAdapter {
 

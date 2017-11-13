@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.assignment2.victorbusk.group07_itsmap17_assignment2">
 
+    <!--APP ICON is from Chronus: Tapas Weather Icons: https://play.google.com/store/apps/details?id=com.dps.chronus.tapas-->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -11,10 +13,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/weather_app_icon"
         android:supportsRtl="true"
+        android:windowSoftInputMode="adjustResize"
         android:theme="@style/AppTheme">
         <activity
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"
             android:name=".CityListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +26,13 @@
             android:name=".CityDetailsActivity"
             android:parentActivityName=".CityListActivity">
             <intent-filter>
-                <action android:name="com.assignment.victor.a201409557_victorbusk_itsmap17_assignment1.A2" />
+                <action android:name="com.assignment2.victorbusk.group07_itsmap17_assignment2.CityDetailsActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".utils.UpdateManager"
+            android:exported="true" >
+        </receiver>
     </application>
 </manifest>

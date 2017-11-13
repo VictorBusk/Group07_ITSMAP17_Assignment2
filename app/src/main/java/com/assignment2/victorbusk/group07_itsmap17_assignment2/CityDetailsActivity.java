@@ -8,36 +8,39 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Listener;
-import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherService;
 import com.squareup.picasso.Picasso;
 
-public class CityDetailsActivity extends AppCompatActivity implements Listener {
+public class CityDetailsActivity extends AppCompatActivity {
 
-    private Button btnRemove, btnOk;
     public TextView txtCity, txtTemp, txtHumidity, txtDescription;
-    private ImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.city_details_activity);
+
+        final Intent data = getIntent();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         txtCity = findViewById(R.id.tvCityName);
-        txtTemp = findViewById(R.id.tvTemp);
-        txtHumidity = findViewById(R.id.tvHumidity);
-        txtDescription = findViewById(R.id.tvDescription);
-        img = findViewById(R.id.img);
+        txtCity.setText(data.getStringExtra(Const.CITY_NAME));
 
-        final Intent data = getIntent();
+        txtTemp = findViewById(R.id.tvTemp);
+        txtTemp.setText("Temperature\n" + data.getStringExtra(Const.TEMP) + "°C");
+
+        txtHumidity = findViewById(R.id.tvHumidity);
+        txtHumidity.setText("Humidity\n" + data.getStringExtra(Const.HUMIDITY) + "%");
+
+        txtDescription = findViewById(R.id.tvDescription);
+        txtDescription.setText(data.getStringExtra(Const.DESCRIPTION));
+
+        ImageView img = findViewById(R.id.img);
+        Picasso.with(this).load("http://openweathermap.org/img/w/" + data.getStringExtra(Const.WEATHER_IMAGE) + ".png").resize(300,300).into(img);
+
         final String cityName = data.getStringExtra(Const.CITY_NAME);
-        new WeatherService(this).execute(Connector.CallAPI(cityName));
 
         //Refresh button pressed: Reload layout and reload listView (fresh data)
-        btnRemove = findViewById(R.id.btnRemove);
+        Button btnRemove = findViewById(R.id.btnRemove);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,21 +52,12 @@ public class CityDetailsActivity extends AppCompatActivity implements Listener {
         });
 
         //Refresh button pressed: Reload layout and reload listView (fresh data)
-        btnOk = findViewById(R.id.btnOk);
+        Button btnOk = findViewById(R.id.btnOk);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onRemoteCallComplete(WeatherItemModel weather) {
-        txtCity.setText(weather.getName());
-        txtTemp.setText("Temperature:\n" + weather.getTemperature() + "°C");
-        txtHumidity.setText("Humidity:\n" + weather.getHumidity() + "%");
-        txtDescription.setText(weather.getDescription());
-        Picasso.with(this).load("http://openweathermap.org/img/w/" + weather.getImage() + ".png").resize(300,300).into(img);
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather App 07</string>
+    <string name="btn_refresh">Refresh</string>
+    <string name="btn_remove">Remove</string>
+    <string name="btn_ok">Ok</string>
+    <string name="btn_add">Add</string>
+    <string name="tv_description">Description:</string>
+    <string name="tv_description_details">Overcast clouds</string>
+    <string name="tv_humidity">0</string>
+    <string name="tv_city_name">Aarhus</string>
+    <string name="tv_temp">0</string>
+    <string name="humidity_symbol">%</string>
+    <string name="temp_symbol">°C</string>
+</resources>

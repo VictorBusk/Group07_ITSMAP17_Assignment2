@@ -9,11 +9,5 @@ public class Const {
     public static final String TEMP = "temp";
     public static final String HUMIDITY = "memory";
     public static final String DESCRIPTION = "desc";
-    public static final int DELETE_POS = 5;
-
-
     public static final String KEY = "words";
-
-    public static final String LIST_ACTIVITY_CALLER = "list";
-    public static final String DETAILS_ACTIVITY_CALLER = "details";
 }

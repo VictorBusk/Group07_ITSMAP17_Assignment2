@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -25,9 +25,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/tv_city_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/img" />
 
     <TextView
         android:id="@+id/tvHumidity"
@@ -37,7 +38,8 @@
         android:layout_marginTop="24dp"
         android:text="@string/tv_humidity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCityName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCityName"
+        android:layout_marginLeft="80dp" />
 
 
     <TextView
@@ -48,7 +50,8 @@
         android:layout_marginTop="24dp"
         android:text="@string/tv_temp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCityName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCityName"
+        android:layout_marginRight="80dp" />
 
     <TextView
         android:id="@+id/textView6"
