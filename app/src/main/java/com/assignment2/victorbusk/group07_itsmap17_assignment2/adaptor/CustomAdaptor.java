@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.R;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
+import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,15 +28,16 @@ public class CustomAdaptor extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(weather!=null) {
+        if (weather != null) {
             return weather.size();
         } else {
             return 0;
-        }    }
+        }
+    }
 
     @Override
     public Object getItem(int position) {
-        if(weather!=null) {
+        if (weather != null) {
             return weather.get(position);
         } else {
             return null;
@@ -55,7 +57,7 @@ public class CustomAdaptor extends BaseAdapter {
         }
 
         weatherItemModel = weather.get(position);
-        if(weatherItemModel!=null){
+        if (weatherItemModel != null) {
             TextView txtCityName = customView.findViewById(R.id.tvCityName);
             txtCityName.setText(weatherItemModel.getName());
 
@@ -69,7 +71,7 @@ public class CustomAdaptor extends BaseAdapter {
 
             String imageString = weatherItemModel.getImage();
             ImageView image = customView.findViewById(R.id.img);
-            Picasso.with(context).load("http://openweathermap.org/img/w/" + imageString + ".png").resize(50,50).into(image); //Inspired by: http://square.github.io/picasso/
+            Picasso.with(context).load(Connector.iconURL(imageString)).resize(50, 50).into(image); //Inspired by: http://square.github.io/picasso/
         }
         return customView;
     }

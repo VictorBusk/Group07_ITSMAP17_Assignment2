@@ -21,10 +21,9 @@ import static com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Conn
 
 public class WeatherService extends AsyncTask<String, Void, String> {
 
-    private static final double TO_CELCIOUS_FROM_KELVIN = -273.15;
     Context context;
 
-    public WeatherService(Context context){
+    public WeatherService(Context context) {
         this.context = context;
     }
 
@@ -62,14 +61,14 @@ public class WeatherService extends AsyncTask<String, Void, String> {
             CityWeather weatherData = gson.fromJson(result, CityWeather.class);
             String cityName = weatherData.name;
             DecimalFormat df = new DecimalFormat("#");
-            String temperature = df.format(weatherData.main.temp.doubleValue() + TO_CELCIOUS_FROM_KELVIN);
+            String temperature = df.format(weatherData.main.temp.doubleValue());
             String humidity = df.format(weatherData.main.humidity.doubleValue());
             String img = weatherData.weather.get(0).icon;
 
             StringBuilder description = new StringBuilder();
-            for(int i=0; i<weatherData.weather.size(); i++) {
+            for (int i = 0; i < weatherData.weather.size(); i++) {
                 description.append(weatherData.weather.get(i).description);
-                if(i+1 != weatherData.weather.size()){
+                if (i + 1 != weatherData.weather.size()) {
                     description.append("/");
                 }
             }

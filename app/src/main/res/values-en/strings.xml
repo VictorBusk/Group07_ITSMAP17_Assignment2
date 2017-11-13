@@ -12,4 +12,6 @@
     <string name="tv_temp">0</string>
     <string name="humidity_symbol">%</string>
     <string name="temp_symbol">°C</string>
+    <string name="txt_temp">Temperature</string>
+    <string name="txt_hum">Humidity</string>
 </resources>

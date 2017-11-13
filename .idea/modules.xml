@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\victo\Desktop\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2.iml" filepath="C:\Users\victo\Desktop\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Group07_ITSMAP17_Assignment2-master.iml" filepath="$PROJECT_DIR$/Group07_ITSMAP17_Assignment2-master.iml" />
-      <module fileurl="file://C:\Users\Victor Busk\Desktop\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2\Group07_ITSMAP17_Assignment2-master.iml" filepath="C:\Users\Victor Busk\Desktop\Group07_ITSMAP17_Assignment2-master\Group07_ITSMAP17_Assignment2\Group07_ITSMAP17_Assignment2-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Group07_ITSMAP17_Assignment2.iml" filepath="$PROJECT_DIR$/Group07_ITSMAP17_Assignment2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
