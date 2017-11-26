@@ -49,29 +49,34 @@ public class CustomAdaptor extends BaseAdapter {
         return position;
     }
 
+    //Set current listview item in accordance to this custom setup
     public View getView(int position, View customView, ViewGroup parent) {
         if (customView == null) {
             LayoutInflater demoInflator = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            customView = demoInflator.inflate(R.layout.custom_row, null);
+            customView = demoInflator.inflate(R.layout.weather_list_item, null);
         }
 
-        weatherItemModel = weather.get(position);
+        weatherItemModel = weather.get(position); //Get current position in the listview
         if (weatherItemModel != null) {
+            //Insert data from the model into our custom listview item (weather_list_item.xml)
             TextView txtCityName = customView.findViewById(R.id.tvCityName);
             txtCityName.setText(weatherItemModel.getName());
 
-            String tempString = weatherItemModel.getTemperature() + "°C";
+            String tempPostfix = context.getString(R.string.temp_symbol);
+            String tempString = weatherItemModel.getTemperature() + tempPostfix;
             TextView txtTemperature = customView.findViewById(R.id.tvTemp);
             txtTemperature.setText(tempString);
 
-            String humidString = weatherItemModel.getHumidity() + "%";
+            String humPostfix = context.getString(R.string.humidity_symbol);
+            String humidString = weatherItemModel.getHumidity() + humPostfix;
             TextView txtHumid = customView.findViewById(R.id.tvHumidity);
             txtHumid.setText(humidString);
 
             String imageString = weatherItemModel.getImage();
             ImageView image = customView.findViewById(R.id.img);
-            Picasso.with(context).load(Connector.iconURL(imageString)).resize(50, 50).into(image); //Inspired by: http://square.github.io/picasso/
+            //Loading images using Picasso: http://square.github.io/picasso/
+            Picasso.with(context).load(Connector.iconURL(imageString)).resize(50, 50).into(image);
         }
         return customView;
     }

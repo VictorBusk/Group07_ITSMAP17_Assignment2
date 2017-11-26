@@ -42,11 +42,12 @@ public class CityDetailsActivity extends AppCompatActivity {
         txtDescription.setText(data.getStringExtra(Const.DESCRIPTION));
 
         ImageView img = findViewById(R.id.img);
+        //Loading images using Picasso: http://square.github.io/picasso/
         Picasso.with(this).load(Connector.iconURL(data.getStringExtra(Const.WEATHER_IMAGE))).resize(300, 300).into(img);
 
         final String cityName = data.getStringExtra(Const.CITY_NAME);
 
-        //Refresh button pressed: Reload layout and reload listView (fresh data)
+        //Remove button pressed: Delete selected item from listview
         Button btnRemove = findViewById(R.id.btnRemove);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +59,7 @@ public class CityDetailsActivity extends AppCompatActivity {
             }
         });
 
-        //Refresh button pressed: Reload layout and reload listView (fresh data)
+        //Ok button pressed: Finish activity and resume CityListActivity
         Button btnOk = findViewById(R.id.btnOk);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override

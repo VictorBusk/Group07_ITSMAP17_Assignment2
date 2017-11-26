@@ -14,4 +14,5 @@
     <string name="temp_symbol">°C</string>
     <string name="txt_temp">Tempratur</string>
     <string name="txt_hum">Fugtighed</string>
+    <string name="NotificationDescription">Vejr app er blevet opdateret kl: </string>
 </resources>

@@ -25,14 +25,20 @@ import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.Connector;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.UpdateManager;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class CityListActivity extends AppCompatActivity {
 
     private ListView weatherLV;
     public static int rowNum;
-    public static SharedPreferences preferences;
+    public static SharedPreferences preferences; //Shared preferences inspired by: https://stackoverflow.com/questions/23024831/android-shared-preferences-example
     public static ArrayList<WeatherItemModel> weatherList;
     int currentDeletePos;
     CustomAdaptor customAdaptor;
@@ -47,7 +53,7 @@ public class CityListActivity extends AppCompatActivity {
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver,
-                new IntentFilter("update-list-event"));
+                new IntentFilter(Const.UPDATE_EVENT)); //Listen for a local broadcast with this action
 
         preferences = getSharedPreferences("PREFS", 0);
 
@@ -104,6 +110,7 @@ public class CityListActivity extends AppCompatActivity {
         }
     }
 
+    //Shared preferences inspired by: https://stackoverflow.com/questions/23024831/android-shared-preferences-example
     protected void persistCity() throws Exception { //Saved city name and refresh all data
         String newCity = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Expand sharedpreference list
         SharedPreferences.Editor editor = preferences.edit();
@@ -129,12 +136,14 @@ public class CityListActivity extends AppCompatActivity {
         sendNotification();
     }
 
+    //When receiving a broadcast we will extract the values from the intent to create a new listview item
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             Log.d("receiver", "Got message: " + message);
+            //Extract values from intent
             String city = intent.getStringExtra(Const.CITY_NAME);
             String temp = intent.getStringExtra(Const.TEMP);
             String humid = intent.getStringExtra(Const.HUMIDITY);
@@ -142,14 +151,15 @@ public class CityListActivity extends AppCompatActivity {
             String img = intent.getStringExtra(Const.WEATHER_IMAGE);
 
             WeatherItemModel newWeatherItemModel = new WeatherItemModel(city, temp, humid, desc, img);
-            weatherList.add(rowNum, newWeatherItemModel);
+            weatherList.add(rowNum, newWeatherItemModel); //Add new data to the current row
             customAdaptor = new CustomAdaptor(context, weatherList);
             customAdaptor.notifyDataSetChanged();
-            weatherLV.setAdapter(customAdaptor);
+            weatherLV.setAdapter(customAdaptor); //Use the CustomAdapter
             rowNum++;
         }
     };
 
+    //Trigger an alarm every 5 min, that will call the API (and the API will send out a notification).
     public void startAlarm() throws ExecutionException, InterruptedException {
         Intent intent = new Intent(CityListActivity.this, UpdateManager.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
@@ -180,11 +190,18 @@ public class CityListActivity extends AppCompatActivity {
     }
 
     public void sendNotification() {
+        // Inspired by: https://stackoverflow.com/questions/11913358/how-to-get-the-current-time-in-android
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
+        Date currentLocalTime = cal.getTime();
+        DateFormat date = new SimpleDateFormat("HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+        String localTime = date.format(currentLocalTime);
+
         NotificationCompat.Builder notification =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(getText(R.string.app_name))
-                        .setContentText("Weather data has been updated");
+                        .setContentText(getText(R.string.NotificationDescription) + localTime);
         notificationManager.notify(NOTIFY_ID, notification.build());
     }
 

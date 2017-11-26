@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+// Created by http://www.jsonschema2pojo.org/
 public class CityWeather {
 
     @SerializedName("coord")

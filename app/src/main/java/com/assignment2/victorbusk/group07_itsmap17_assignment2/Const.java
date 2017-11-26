@@ -10,4 +10,5 @@ public class Const {
     public static final String HUMIDITY = "memory";
     public static final String DESCRIPTION = "desc";
     public static final String KEY = "words";
+    public static final String UPDATE_EVENT = "update-list-event";
 }

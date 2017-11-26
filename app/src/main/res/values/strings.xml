@@ -13,4 +13,5 @@
     <string name="temp_symbol">°C</string>
     <string name="txt_temp">Temperature</string>
     <string name="txt_hum">Humidity</string>
+    <string name="NotificationDescription">Weather app has been updated at: </string>
 </resources>
