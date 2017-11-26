@@ -15,4 +15,5 @@
     <string name="txt_temp">Tempratur</string>
     <string name="txt_hum">Fugtighed</string>
     <string name="NotificationDescription">Vejr app er blevet opdateret kl: </string>
+    <string name="city_existing">By allerede tilføjet</string>
 </resources>

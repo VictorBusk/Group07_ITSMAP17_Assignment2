@@ -15,4 +15,5 @@
     <string name="txt_temp">Temperature</string>
     <string name="txt_hum">Humidity</string>
     <string name="NotificationDescription">Weather app has been updated at: </string>
+    <string name="city_existing">City already added</string>
 </resources>

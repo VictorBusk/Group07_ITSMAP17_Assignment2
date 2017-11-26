@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.adaptor.CustomAdaptor;
 import com.assignment2.victorbusk.group07_itsmap17_assignment2.model.WeatherItemModel;
@@ -27,7 +28,6 @@ import com.assignment2.victorbusk.group07_itsmap17_assignment2.utils.WeatherServ
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -112,11 +112,17 @@ public class CityListActivity extends AppCompatActivity {
 
     //Shared preferences inspired by: https://stackoverflow.com/questions/23024831/android-shared-preferences-example
     protected void persistCity() throws Exception { //Saved city name and refresh all data
-        String newCity = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Expand sharedpreference list
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Const.KEY, newCity);
-        editor.apply();
-        callAPI();
+        String newCity = txtCity.getText().toString() + "!";
+        if (!preferences.getString(Const.KEY, "").contains(newCity)) { //Add city if not already existing
+            String newSharedPreferences = preferences.getString(Const.KEY, "") + txtCity.getText().toString() + "!"; //Expand sharedpreference list
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Const.KEY, newSharedPreferences);
+            editor.apply();
+            callAPI();
+        } else { //If city already added, send out informative toast
+            Toast.makeText(this, R.string.city_existing,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     public void callAPI() throws ExecutionException, InterruptedException { //Refresh listview from API call
